@@ -16,4 +16,4 @@ module.exports 	= function(app) {
 	app.post('/api/logout', function(req, res){
 	  res.sendStatus(200);
 	});
-}
+};

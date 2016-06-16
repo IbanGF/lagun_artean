@@ -6,5 +6,5 @@ function userService($http){
 		create: function(user){
 			return $http.post('/api/users', user);
 		}
-	}
+	};
 }

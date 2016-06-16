@@ -28,7 +28,7 @@ function config($routeProvider, $httpProvider) {
         .otherwise({
             redirectTo: '/'
         });
-    
+
     $httpProvider.interceptors.push(function ($q, $location, $rootScope) {
        return {
            'request': function (config) {
@@ -52,16 +52,16 @@ function checkIsConnected($q, $http, $rootScope, $location) {
     var deferred = $q.defer();
 
     $http.get('/api/loggedin').success(function () {
-        // Authenticated 
+        // Authenticated
         deferred.resolve();
     }).error(function () {
-        // Not Authenticated 
+        // Not Authenticated
         deferred.reject();
         $location.url('/login');
     });
 
     return deferred.promise;
-};
+}
 
 
 function run($rootScope, $location, connectService) {
@@ -85,8 +85,8 @@ function run($rootScope, $location, connectService) {
         $rootScope.loginMessage.message = '';
         connectService.disconnect().then(function () {
             $location.url('/login');
-        })
-    }
+        });
+    };
 
 }
 
@@ -102,7 +102,7 @@ function checkPassword() {
                 });
             });
         }
-    }
+    };
 }
 
 

@@ -25,7 +25,7 @@ var User = {
                 res.sendStatus(403);
             else {
                 var token = jwt.sign(user, 'tokenSecret', {
-                    expiresInMinutes: 1440 // expires in 24 hours
+                    expiresIn: '1h' // expires in 24 hours
                 });
 
                 // return the information including token as JSON
@@ -42,6 +42,9 @@ var User = {
         User.model.find({}, {
             password: 0
         }, function(err, users) {
+            if (err) {
+              console.log(err);
+            }
             res.json(users);
         });
     },
@@ -62,7 +65,7 @@ var User = {
                 else {
                     if (err.code === 11000 || err.code === 11001)
                         err.message = "Username " + req.body.name + " already exist";
-
+                        console.log(err);
                     res.status(500).send(err.message);
                 }
             });
@@ -84,9 +87,9 @@ var User = {
             if (err)
                 res.status(500).send(err.message);
             res.sendStatus(200);
-        })
+        });
     }
-}
+};
 
 
 module.exports = User;

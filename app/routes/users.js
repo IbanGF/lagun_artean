@@ -17,4 +17,4 @@ module.exports 	= function(app) {
 
 	app.delete('/api/users/:id', Auth.user.isAdministrator, User.delete);
 
-}
+};
