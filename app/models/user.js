@@ -7,7 +7,14 @@ var userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    email: {
+      type: String,
+      required: true,
+      match: /\S+@\S+\.\S+/,
+      unique: true
+    },
     password: String,
+    avatar: String,
     isAdmin: {
         type: Boolean,
         default: false
@@ -18,6 +25,7 @@ var User = {
     model: mongoose.model('User', userSchema),
 
     connect: function(req, res) {
+      console.log(req.body);
         User.model.findOne(req.body, {
             password: 0
         }, function(err, user) {
