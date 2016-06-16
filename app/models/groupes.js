@@ -16,30 +16,33 @@ var Groupe = {
     model: mongoose.model('Groupe', groupeSchema),
 
     findAll: function(req, res) {
-        Groupe.model.find({}, {
-            password: 0
-        }, function(err, groupes) {
-            if (err) {
-                console.log(err);
-            }
-            res.json(groupes);
-        });
+        Groupe.model.find()
+            .populate('users')
+            .exec(function(err, groupes) {
+                if (err) {
+                    console.log(err);
+                }
+                res.json(groupes);
+            });
     },
     findById: function(req, res) {
-        Groupe.model.findById(req.params.id, {
-            password: 0
-        }, function(err, groupe) {
-            res.json(groupe);
-        });
+        Groupe.model.findById(
+                req.params.id, {
+                    password: 0
+                })
+            .populate('users')
+            .exec(function(err, groupe) {
+                res.json(groupe);
+            });
     },
     create: function(req, res) {
         Groupe.model.create(req.body,
             function(err, data) {
                 if (err)
-                  res.status(500).send(err.message);
+                    res.status(500).send(err.message);
                 else {
-                  console.log(data);
-                  Groupe.addUserToGroup(data._id, req.params.user_id, res);
+                    console.log(data);
+                    Groupe.addUserToGroup(data._id, req.params.user_id, res);
                 }
             });
     },
