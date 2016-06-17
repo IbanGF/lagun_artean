@@ -5,6 +5,7 @@ var tripSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    name: String,
     start_date: Date,
     end_date: Date,
     budgets: [{
@@ -69,7 +70,17 @@ var Trip = {
     },
 
     create: function(req, res) {
-        Trip.model.create(req.body,
+        Trip.model.create(req.body
+                // name: req.body.name,
+                // start_date: req.body.start_date,
+                // end_date: req.body.end_date,
+                // $push: {
+                //     destinations: req.body.destinations
+                // },
+                // $push: {
+                //     budgets: req.body.budget
+                // }
+            ,
             function(err, trip) {
                 if (!err)
                     res.send(err);
