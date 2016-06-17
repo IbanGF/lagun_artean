@@ -5,6 +5,10 @@ var tripSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    group: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Groupe'
+    },
     name: String,
     start_date: Date,
     end_date: Date,
@@ -51,35 +55,41 @@ var Trip = {
     model: mongoose.model('Trip', tripSchema),
 
     findAll: function(req, res) {
-        Trip.model.find({}, {
-            password: 0
-        }, function(err, trips) {
-            if (err) {
-                console.log(err);
-            }
-            res.json(trips);
-        });
+        Trip.model.find()
+            .populate('group')
+            .exec(function(err, trips) {
+                if (err) {
+                    console.log(err);
+                }
+                res.json(trips);
+            });
     },
 
     findById: function(req, res) {
-        Trip.model.findById(req.params.id, {
-            password: 0
-        }, function(err, trip) {
-            res.json(trip);
-        });
+        Trip.model.findById(req.params.id)
+            .populate({
+                path: 'group',
+                // Get friends of friends - populate the 'friends' array for every friend
+                populate: {
+                    path: 'users'
+                }
+            })
+            .exec(function(err, trip) {
+                res.json(trip);
+            });
     },
 
     create: function(req, res) {
         Trip.model.create(req.body
-                // name: req.body.name,
-                // start_date: req.body.start_date,
-                // end_date: req.body.end_date,
-                // $push: {
-                //     destinations: req.body.destinations
-                // },
-                // $push: {
-                //     budgets: req.body.budget
-                // }
+            // name: req.body.name,
+            // start_date: req.body.start_date,
+            // end_date: req.body.end_date,
+            // $push: {
+            //     destinations: req.body.destinations
+            // },
+            // $push: {
+            //     budgets: req.body.budget
+            // }
             ,
             function(err, trip) {
                 if (!err)
