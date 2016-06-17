@@ -38,11 +38,12 @@ var Groupe = {
     create: function(req, res) {
         Groupe.model.create(req.body,
             function(err, data) {
-                if (err)
+                if (err) {
+                    console.log(err);
                     res.status(500).send(err.message);
-                else {
+                } else {
                     console.log(data);
-                    Groupe.addUserToGroup(data._id, req.params.user_id, res);
+                    Groupe.addUserToGroupFromCreate(data._id, req.params.user_id, res);
                 }
             });
     },
@@ -61,13 +62,42 @@ var Groupe = {
         Groupe.model.findByIdAndRemove(req.params.id, function(err) {
             if (err)
                 res.status(500).send(err.message);
-            res.sendStatus(200);
+            else
+              res.sendStatus(200);
         });
     },
-    addUserToGroup: function(group_id, user_id, res) {
+    addUserToGroupFromCreate: function(group_id, user_id, res) {
         Groupe.model.findByIdAndUpdate(group_id, {
                 $push: {
                     users: user_id
+                }
+            },
+            function(err) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.sendStatus(200);
+                }
+            });
+    },
+    addUserToGroup: function(req, res) {
+        Groupe.model.findByIdAndUpdate(req.params.group_id, {
+                $push: {
+                    users: req.params.user_id
+                }
+            },
+            function(err) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.sendStatus(200);
+                }
+            });
+    },
+    removeUserFromGroup: function(req, res) {
+        Groupe.model.findByIdAndUpdate(req.params.group_id, {
+                $pull: {
+                    users: req.params.user_id
                 }
             },
             function(err) {
